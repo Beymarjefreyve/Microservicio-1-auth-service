@@ -21,9 +21,9 @@ public class PasswordResetService {
 
     @Transactional
     public String createToken(User user) {
-        tokenRepository.deleteByUser(user); // Delete any existing tokens
+        PasswordResetToken resetToken = tokenRepository.findByUser(user)
+                .orElseGet(PasswordResetToken::new);
 
-        PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setUser(user);
         resetToken.setToken(UUID.randomUUID().toString());
         resetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
