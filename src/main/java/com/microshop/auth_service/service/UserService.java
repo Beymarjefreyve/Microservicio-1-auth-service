@@ -4,16 +4,16 @@ import com.microshop.auth_service.dto.UpdateProfileRequest;
 import com.microshop.auth_service.dto.UserProfileResponse;
 import com.microshop.auth_service.entity.User;
 import com.microshop.auth_service.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserProfileResponse getProfile(String email) {
         User user = userRepository.findByEmail(email)
@@ -23,7 +23,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(user.getRole().name())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
@@ -39,7 +39,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(user.getRole().name())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

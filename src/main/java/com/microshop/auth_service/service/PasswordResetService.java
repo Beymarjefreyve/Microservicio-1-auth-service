@@ -3,7 +3,6 @@ package com.microshop.auth_service.service;
 import com.microshop.auth_service.entity.PasswordResetToken;
 import com.microshop.auth_service.entity.User;
 import com.microshop.auth_service.repository.PasswordResetTokenRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,10 +11,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class PasswordResetService {
 
     private final PasswordResetTokenRepository tokenRepository;
+
+    public PasswordResetService(PasswordResetTokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     @Transactional
     public String createToken(User user) {

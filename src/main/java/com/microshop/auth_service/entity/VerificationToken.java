@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "password_reset_tokens")
-public class PasswordResetToken {
+@Table(name = "verification_tokens")
+public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,33 +21,33 @@ public class PasswordResetToken {
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
-    public PasswordResetToken() {}
+    public VerificationToken() {}
 
-    public PasswordResetToken(String token, User user, LocalDateTime expiryDate) {
+    public VerificationToken(String token, User user, LocalDateTime expiryDate) {
         this.token = token;
         this.user = user;
         this.expiryDate = expiryDate;
     }
 
-    public static PasswordResetTokenBuilder builder() {
-        return new PasswordResetTokenBuilder();
+    public static VerificationTokenBuilder builder() {
+        return new VerificationTokenBuilder();
     }
 
-    public static class PasswordResetTokenBuilder {
+    public static class VerificationTokenBuilder {
         private String token;
         private User user;
         private LocalDateTime expiryDate;
 
-        public PasswordResetTokenBuilder token(String token) { this.token = token; return this; }
-        public PasswordResetTokenBuilder user(User user) { this.user = user; return this; }
-        public PasswordResetTokenBuilder expiryDate(LocalDateTime expiryDate) { this.expiryDate = expiryDate; return this; }
-        public PasswordResetToken build() {
-            return new PasswordResetToken(token, user, expiryDate);
+        public VerificationTokenBuilder token(String token) { this.token = token; return this; }
+        public VerificationTokenBuilder user(User user) { this.user = user; return this; }
+        public VerificationTokenBuilder expiryDate(LocalDateTime expiryDate) { this.expiryDate = expiryDate; return this; }
+        public VerificationToken build() {
+            return new VerificationToken(token, user, expiryDate);
         }
     }
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
+        return LocalDateTime.now().isAfter(expiryDate);
     }
 
     public Long getId() { return id; }
