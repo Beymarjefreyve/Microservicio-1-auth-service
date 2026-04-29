@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -27,9 +30,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
     @Column(nullable = false)
     private boolean enabled = false;
@@ -40,11 +45,11 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String name, String email, String password, Role role, boolean enabled) {
+    public User(String name, String email, String password, Set<Role> roles, boolean enabled) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
         this.enabled = enabled;
     }
 
@@ -57,16 +62,21 @@ public class User implements UserDetails {
         private String name;
         private String email;
         private String password;
-        private Role role;
+        private Set<Role> roles = new HashSet<>();
         private boolean enabled = false;
 
         public UserBuilder name(String name) { this.name = name; return this; }
         public UserBuilder email(String email) { this.email = email; return this; }
         public UserBuilder password(String password) { this.password = password; return this; }
-        public UserBuilder role(Role role) { this.role = role; return this; }
+        public UserBuilder roles(Set<Role> roles) { this.roles = roles; return this; }
+        public UserBuilder role(Role role) { 
+            if (this.roles == null) this.roles = new HashSet<>();
+            this.roles.add(role); 
+            return this; 
+        }
         public UserBuilder enabled(boolean enabled) { this.enabled = enabled; return this; }
         public User build() {
-            return new User(name, email, password, role, enabled);
+            return new User(name, email, password, roles, enabled);
         }
     }
 
@@ -81,14 +91,16 @@ public class User implements UserDetails {
 
     public void setPassword(String password) { this.password = password; }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
 
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toList());
     }
 
     @Override

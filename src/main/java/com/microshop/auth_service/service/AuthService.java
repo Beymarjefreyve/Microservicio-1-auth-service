@@ -9,6 +9,7 @@ import com.microshop.auth_service.repository.VerificationTokenRepository;
 import com.microshop.auth_service.security.JwtUtil;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,7 +52,7 @@ public class AuthService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .roles(request.getRoles())
                 .enabled(false) // Dehabilitado hasta verificar
                 .build();
         
@@ -77,7 +78,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole().name())
+                .roles(user.getRoles().stream().map(Enum::name).collect(Collectors.toList()))
                 .message("Registro exitoso. Por favor verifica tu correo.")
                 .build();
     }
@@ -119,7 +120,7 @@ public class AuthService {
                 .token(jwtToken)
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole().name())
+                .roles(user.getRoles().stream().map(Enum::name).collect(Collectors.toList()))
                 .build();
     }
 
@@ -190,7 +191,7 @@ public class AuthService {
             return TokenValidationResponse.builder()
                     .valid(isValid)
                     .email(user.getEmail())
-                    .role(user.getRole().name())
+                    .roles(user.getRoles().stream().map(Enum::name).collect(Collectors.toList()))
                     .name(user.getName())
                     .build();
         } catch (Exception e) {
