@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        logger.info("Registration attempt for email: {} with role: {}", request.getEmail(), request.getRole());
+        logger.info("Registration attempt for email: {} with roles: {}", request.getEmail(), request.getRoles());
         return ResponseEntity.ok(authService.register(request));
     }
 
@@ -60,6 +60,12 @@ public class AuthController {
     @GetMapping("/validate-token")
     public ResponseEntity<TokenValidationResponse> validateToken(@RequestParam String token) {
         return ResponseEntity.ok(authService.validateToken(token));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getProfile(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.getProfile(email));
     }
 
     @PutMapping("/profile")

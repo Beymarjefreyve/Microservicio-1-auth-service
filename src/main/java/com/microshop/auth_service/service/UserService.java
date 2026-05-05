@@ -23,7 +23,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole().name())
+                .roles(user.getRoles())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
@@ -39,7 +39,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole().name())
+                .roles(user.getRoles())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
