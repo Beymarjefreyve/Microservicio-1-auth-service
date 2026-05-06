@@ -57,7 +57,8 @@ public class EmailService {
         request.put("body", htmlContent);
 
         try {
-            restTemplate.postForEntity(notificationServiceUrl + "/send-verification", request, String.class);
+            // Usamos el endpoint de password-reset porque es el que admite HTML libre en este momento
+            restTemplate.postForEntity(notificationServiceUrl + "/send-password-reset", request, String.class);
         } catch (Exception e) {
             logger.error("Failed to send HTML email: {}", e.getMessage());
         }
