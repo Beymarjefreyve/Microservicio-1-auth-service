@@ -76,6 +76,7 @@ public class AuthService {
         emailService.sendVerificationEmail(user.getEmail(), user.getName(), verificationLink);
 
         return AuthResponse.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(Enum::name).collect(Collectors.toList()))
@@ -118,6 +119,7 @@ public class AuthService {
         
         return AuthResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(Enum::name).collect(Collectors.toList()))
