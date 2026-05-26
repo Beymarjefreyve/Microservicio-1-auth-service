@@ -86,4 +86,18 @@ public class AuthController {
         authService.changePassword(email, request);
         return ResponseEntity.ok("Password changed successfully");
     }
+
+    // Endpoint público para que otros microservicios consulten el nombre de un usuario por ID
+    @GetMapping("/users/{id}/public")
+    public ResponseEntity<?> getPublicUserInfo(@PathVariable Long id) {
+        try {
+            var profile = userService.getProfileById(id);
+            return ResponseEntity.ok(java.util.Map.of(
+                "id", profile.getId(),
+                "name", profile.getName()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

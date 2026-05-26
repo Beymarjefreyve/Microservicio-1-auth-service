@@ -28,6 +28,19 @@ public class UserService {
                 .build();
     }
 
+    public UserProfileResponse getProfileById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
+
     public UserProfileResponse updateProfile(String email, UpdateProfileRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
