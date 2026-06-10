@@ -59,24 +59,28 @@ public class User implements UserDetails {
     }
 
     public static class UserBuilder {
+        private Long id;
         private String name;
         private String email;
         private String password;
         private Set<Role> roles = new HashSet<>();
         private boolean enabled = false;
 
+        public UserBuilder id(Long id) { this.id = id; return this; }
         public UserBuilder name(String name) { this.name = name; return this; }
         public UserBuilder email(String email) { this.email = email; return this; }
         public UserBuilder password(String password) { this.password = password; return this; }
         public UserBuilder roles(Set<Role> roles) { this.roles = roles; return this; }
-        public UserBuilder role(Role role) { 
+        public UserBuilder role(Role role) {
             if (this.roles == null) this.roles = new HashSet<>();
-            this.roles.add(role); 
-            return this; 
+            this.roles.add(role);
+            return this;
         }
         public UserBuilder enabled(boolean enabled) { this.enabled = enabled; return this; }
         public User build() {
-            return new User(name, email, password, roles, enabled);
+            User user = new User(name, email, password, roles, enabled);
+            if (id != null) user.setId(id);
+            return user;
         }
     }
 
