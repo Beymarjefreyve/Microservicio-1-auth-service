@@ -70,7 +70,7 @@ class JwtUtilTest {
 
     @Test
     void isTokenValid_withExpiredToken_shouldReturnFalse() {
-        ReflectionTestUtils.setField(jwtUtil, "jwtExpiration", -1000L); // already expired
+        ReflectionTestUtils.setField(jwtUtil, "jwtExpiration", -3600000L); // 1 hour in the past
         String token = jwtUtil.generateToken(testUser);
         assertThat(jwtUtil.isTokenValid(token, testUser)).isFalse();
     }
