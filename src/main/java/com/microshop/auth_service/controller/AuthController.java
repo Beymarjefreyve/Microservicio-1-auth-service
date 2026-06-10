@@ -100,4 +100,27 @@ public class AuthController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<java.util.List<UserProfileResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PostMapping("/users/{id}/enable")
+    public ResponseEntity<UserProfileResponse> enableUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.setUserEnabled(id, true));
+    }
+
+    @PostMapping("/users/{id}/disable")
+    public ResponseEntity<UserProfileResponse> disableUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.setUserEnabled(id, false));
+    }
+
+    @PutMapping("/users/{id}/roles")
+    public ResponseEntity<UserProfileResponse> updateUserRoles(
+            @PathVariable Long id,
+            @RequestBody java.util.Set<com.microshop.auth_service.entity.Role> roles
+    ) {
+        return ResponseEntity.ok(userService.updateUserRoles(id, roles));
+    }
 }

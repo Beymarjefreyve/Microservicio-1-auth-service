@@ -10,15 +10,17 @@ public class UserProfileResponse {
     private String email;
     private Set<Role> roles;
     private LocalDateTime createdAt;
+    private boolean enabled;
 
     public UserProfileResponse() {}
 
-    public UserProfileResponse(Long id, String name, String email, Set<Role> roles, LocalDateTime createdAt) {
+    public UserProfileResponse(Long id, String name, String email, Set<Role> roles, LocalDateTime createdAt, boolean enabled) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.roles = roles;
         this.createdAt = createdAt;
+        this.enabled = enabled;
     }
 
     public static UserProfileResponseBuilder builder() {
@@ -31,6 +33,7 @@ public class UserProfileResponse {
         private String email;
         private Set<Role> roles;
         private LocalDateTime createdAt;
+        private boolean enabled;
 
         public UserProfileResponseBuilder id(Long id) { this.id = id; return this; }
         public UserProfileResponseBuilder name(String name) { this.name = name; return this; }
@@ -42,8 +45,9 @@ public class UserProfileResponse {
             return this;
         }
         public UserProfileResponseBuilder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
+        public UserProfileResponseBuilder enabled(boolean enabled) { this.enabled = enabled; return this; }
         public UserProfileResponse build() {
-            return new UserProfileResponse(id, name, email, roles, createdAt);
+            return new UserProfileResponse(id, name, email, roles, createdAt, enabled);
         }
     }
 
@@ -61,4 +65,8 @@ public class UserProfileResponse {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }
+

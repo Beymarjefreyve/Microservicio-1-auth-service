@@ -2,9 +2,14 @@ package com.microshop.auth_service.service;
 
 import com.microshop.auth_service.dto.UpdateProfileRequest;
 import com.microshop.auth_service.dto.UserProfileResponse;
+import com.microshop.auth_service.entity.Role;
 import com.microshop.auth_service.entity.User;
 import com.microshop.auth_service.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -56,4 +61,48 @@ public class UserService {
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+
+    public List<UserProfileResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> UserProfileResponse.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .roles(user.getRoles())
+                        .createdAt(user.getCreatedAt())
+                        .enabled(user.isEnabled())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public UserProfileResponse setUserEnabled(Long id, boolean enabled) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setEnabled(enabled);
+        userRepository.save(user);
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
+                .enabled(user.isEnabled())
+                .build();
+    }
+
+    public UserProfileResponse updateUserRoles(Long id, Set<Role> roles) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setRoles(roles);
+        userRepository.save(user);
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
+                .enabled(user.isEnabled())
+                .build();
+    }
 }
+
